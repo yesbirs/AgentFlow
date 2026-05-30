@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../AgentFlow.Api.Test/AgentFlow.Api.Test.csproj" Id="15b13688-8315-4784-adf8-57453b8e9cfb" />
+  <Project Path="AgentFlow.API.csproj" />
+</Solution>
