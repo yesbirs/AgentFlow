@@ -18,5 +18,8 @@ namespace AgentFlow.API.Models
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        [Required]
+        public string CreatedByUserId { get; set; } = string.Empty;
     }
 }

@@ -18,7 +18,7 @@ public class PostgreSqlTaskService : ITaskService
         _logger = logger;
     }
 
-    public async Task<AgentTask> CreateTask(CreateTaskRequest request, CancellationToken cancellationToken)
+    public async Task<AgentTask> CreateTask(CreateTaskRequest request, string? userId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Creating task in database: {TaskName}", request.Name);
 
@@ -30,7 +30,8 @@ public class PostgreSqlTaskService : ITaskService
             Priority = request.Priority,
             ScheduledAt = request.ScheduledAt,
             CreatedAt = DateTime.UtcNow,
-            Status = "pending"
+            Status = "pending",
+            CreatedByUserId = userId
         };
 
         await _taskRepository.CreateTask(task, cancellationToken);
@@ -39,10 +40,22 @@ public class PostgreSqlTaskService : ITaskService
         return task;
     }
 
-    public async Task<AgentTask?> GetTaskById(Guid id, CancellationToken cancellationToken)
+    public async Task<AgentTask?> GetTaskById(Guid id, string? userId, bool isAdmin, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Fetching task from database: {TaskId}", id);
-        return await _taskRepository.GetTask(id, cancellationToken);
+        var task = await _taskRepository.GetTask(id, cancellationToken);
+        if (task == null)
+        {
+            return null;
+        }
+
+        if (!isAdmin && task.CreatedByUserId != userId)
+        {
+            // Not authorized
+            throw new UnauthorizedAccessException("Not allowed to access this task");
+        }
+
+        return task;
     }
 
     public async Task<PagedResult<AgentTask>> GetFilteredTasks(TaskQueryParameters taskQueryParameters, CancellationToken cancellationToken)
@@ -55,7 +68,7 @@ public class PostgreSqlTaskService : ITaskService
             taskQueryParameters.Priority);
 
         List<AgentTask> filteredTasks = await _taskRepository.GetFilteredAsync(taskQueryParameters, cancellationToken);
-        int totalCount = await _taskRepository.GetTotalTasksCount(cancellationToken);
+        int totalCount = await _taskRepository.GetTotalTasksCount(taskQueryParameters, cancellationToken);
 
         return new PagedResult<AgentTask>
         {
@@ -66,7 +79,7 @@ public class PostgreSqlTaskService : ITaskService
         };
     }
 
-    public async Task<AgentTask> UpdateTask(Guid id, UpdateTaskRequest request, CancellationToken cancellationToken)
+    public async Task<AgentTask> UpdateTask(Guid id, UpdateTaskRequest request, string? userId, bool isAdmin, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Updating task in database: {TaskId}", id);
 
@@ -76,6 +89,11 @@ public class PostgreSqlTaskService : ITaskService
         {
             _logger.LogWarning("Task {TaskId} not found in database", id);
             throw new TaskNotFoundException(id);
+        }
+
+        if (!isAdmin && task.CreatedByUserId != userId)
+        {
+            throw new UnauthorizedAccessException("Not allowed to update this task");
         }
 
         task.Name = request.Name;
@@ -109,6 +127,7 @@ public class PostgreSqlTaskService : ITaskService
     public async Task<int> GetTotalTasksCount(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting total tasks count from database");
-        return await _taskRepository.GetTotalTasksCount(cancellationToken);
+        // Return unfiltered total count
+        return await _taskRepository.GetTotalTasksCount(new TaskQueryParameters(), cancellationToken);
     }
 }

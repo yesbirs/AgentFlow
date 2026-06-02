@@ -7,5 +7,6 @@ namespace AgentFlow.API.Models
         public bool? IsActive { get; set; }
         public string? SortBy { get; set; } = "CreatedAt";
         public string? SortOrder { get; set; } = "desc";
+        public string? CreatedByUserId { get; set; }
     }
 }

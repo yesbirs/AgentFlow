@@ -2,13 +2,19 @@ using AgentFlow.API.Exceptions;
 using AgentFlow.API.Models;
 using AgentFlow.API.Options;
 using AgentFlow.API.Services;
+using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 
 namespace AgentFlow.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
+    [Authorize]
+    [EnableRateLimiting("GlobalLimiter")]
     public class WorkflowDefinitionsController : ControllerBase
     {
         private readonly IWorkflowDefinitionService _workflowDefinitionService;
@@ -51,6 +57,13 @@ namespace AgentFlow.API.Controllers
                 SortOrder = sortOrder
             };
 
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isAdmin = User.IsInRole("Admin");
+            if (!isAdmin)
+            {
+                parameters.CreatedByUserId = userId;
+            }
+
             var result = await _workflowDefinitionService.GetFilteredAsync(parameters, cancellationToken);
             return Ok(result);
         }
@@ -79,7 +92,8 @@ namespace AgentFlow.API.Controllers
             [FromBody] CreateWorkFlowDefinitionRequest request,
             CancellationToken cancellationToken)
         {
-            var createdWorkflow = await _workflowDefinitionService.CreateAsync(request, cancellationToken);
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var createdWorkflow = await _workflowDefinitionService.CreateAsync(request, userId, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = createdWorkflow.Id }, createdWorkflow);
         }
 
@@ -100,6 +114,7 @@ namespace AgentFlow.API.Controllers
         /// Soft delete a workflow definition (sets IsActive to false)
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             await _workflowDefinitionService.DeleteAsync(id, cancellationToken);

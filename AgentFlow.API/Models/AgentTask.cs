@@ -14,6 +14,8 @@ namespace AgentFlow.API.Models
         public DateTime? ScheduledAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Status { get; set; } = "pending";
+
+        public string? CreatedByUserId { get; set; }
         public Guid? ProjectId { get; set; }
 
         [ForeignKey("ProjectId")]

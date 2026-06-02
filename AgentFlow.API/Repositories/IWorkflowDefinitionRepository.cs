@@ -14,6 +14,6 @@ namespace AgentFlow.API.Repositories
 
         Task<List<WorkFlowDefinition>> GetFilteredAsync(WorkflowDefinitionQueryParameters parameters, CancellationToken cancellationToken);
 
-        Task<int> GetTotalCountAsync(bool? isActive, CancellationToken cancellationToken);
+        Task<int> GetTotalCountAsync(WorkflowDefinitionQueryParameters parameters, CancellationToken cancellationToken);
     }
 }

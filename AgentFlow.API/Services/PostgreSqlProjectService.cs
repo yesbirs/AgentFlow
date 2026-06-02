@@ -16,7 +16,7 @@ namespace AgentFlow.API.Services
             _logger = logger;
         }
 
-        public async Task<Project> CreateProject(CreateProjectRequest request, CancellationToken cancellationToken)
+        public async Task<Project> CreateProject(CreateProjectRequest request, string? userId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Creating project with name: {ProjectName}", request.Name);
             var newProject = new Project
@@ -26,7 +26,8 @@ namespace AgentFlow.API.Services
                 Description = request.Description,
                 Status = "Active",
                 OwnerEmail = request.OwnerEmail,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                CreatedByUserId = userId
             };
             await _projectRepository.CreateProject(newProject, cancellationToken);
             _logger.LogInformation("Project created with ID: {ProjectId}", newProject.Id);
@@ -57,7 +58,7 @@ namespace AgentFlow.API.Services
             return new PagedResult<Project>
             {
                 Data = filteredProjects,
-                TotalCount = await _projectRepository.GetTotalProjectCounts(cancellationToken),
+                TotalCount = await _projectRepository.GetTotalProjectCounts(projectQueryParameters, cancellationToken),
                 PageNumber = projectQueryParameters.PageNumber,
                 PageSize = projectQueryParameters.PageSize
             };

@@ -5,7 +5,7 @@ namespace AgentFlow.API.Services
 {
     public interface IProjectService
     {
-        public Task<Project> CreateProject(CreateProjectRequest request, CancellationToken cancellationToken);
+        public Task<Project> CreateProject(CreateProjectRequest request, string? userId, CancellationToken cancellationToken);
 
         public Task<Project?> UpdateProject(Guid id, UpdateProjectRequest request, CancellationToken cancellationToken);
 

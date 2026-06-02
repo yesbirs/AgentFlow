@@ -48,6 +48,11 @@ namespace AgentFlow.API.Repositories
                 query = query.Where(w => w.IsActive == parameters.IsActive.Value);
             }
 
+            if (!string.IsNullOrEmpty(parameters.CreatedByUserId))
+            {
+                query = query.Where(w => w.CreatedByUserId == parameters.CreatedByUserId);
+            }
+
             // Sorting
             query = parameters.SortBy?.ToLower() switch
             {
@@ -72,13 +77,18 @@ namespace AgentFlow.API.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<int> GetTotalCountAsync(bool? isActive, CancellationToken cancellationToken)
+        public async Task<int> GetTotalCountAsync(WorkflowDefinitionQueryParameters parameters, CancellationToken cancellationToken)
         {
             var query = _dbContext.WorkflowDefinitions.AsQueryable();
 
-            if (isActive.HasValue)
+            if (parameters.IsActive.HasValue)
             {
-                query = query.Where(w => w.IsActive == isActive.Value);
+                query = query.Where(w => w.IsActive == parameters.IsActive.Value);
+            }
+
+            if (!string.IsNullOrEmpty(parameters.CreatedByUserId))
+            {
+                query = query.Where(w => w.CreatedByUserId == parameters.CreatedByUserId);
             }
 
             return await query.CountAsync(cancellationToken);

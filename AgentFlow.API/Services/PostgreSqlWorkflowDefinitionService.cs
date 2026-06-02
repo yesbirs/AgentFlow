@@ -15,7 +15,7 @@ namespace AgentFlow.API.Services
             _logger = logger;
         }
 
-        public async Task<WorkFlowDefinition> CreateAsync(CreateWorkFlowDefinitionRequest request, CancellationToken cancellationToken)
+        public async Task<WorkFlowDefinition> CreateAsync(CreateWorkFlowDefinitionRequest request, string? userId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Creating workflow definition: {WorkflowName}", request.Name);
 
@@ -27,7 +27,8 @@ namespace AgentFlow.API.Services
                 StepsJson = request.StepsJson ?? "[]",
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
-                Version = 1
+                Version = 1,
+                CreatedByUserId = userId ?? string.Empty
             };
 
             await _repository.CreateAsync(workflowDefinition, cancellationToken);
@@ -95,7 +96,7 @@ namespace AgentFlow.API.Services
                 queryParameters.IsActive);
 
             var workflowDefinitions = await _repository.GetFilteredAsync(queryParameters, cancellationToken);
-            var totalCount = await _repository.GetTotalCountAsync(queryParameters.IsActive, cancellationToken);
+            var totalCount = await _repository.GetTotalCountAsync(queryParameters, cancellationToken);
 
             return new PagedResult<WorkFlowDefinition>
             {

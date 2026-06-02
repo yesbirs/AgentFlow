@@ -4,7 +4,7 @@ namespace AgentFlow.API.Services
 {
     public interface IWorkflowDefinitionService
     {
-        Task<WorkFlowDefinition> CreateAsync(CreateWorkFlowDefinitionRequest request, CancellationToken cancellationToken);
+        Task<WorkFlowDefinition> CreateAsync(CreateWorkFlowDefinitionRequest request, string? userId, CancellationToken cancellationToken);
 
         Task<WorkFlowDefinition?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 

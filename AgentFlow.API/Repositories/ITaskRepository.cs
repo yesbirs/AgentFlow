@@ -21,6 +21,6 @@ namespace AgentFlow.API.Repositories
 
         public Task<List<AgentTask>> GetFilteredAsync(TaskQueryParameters parameters, CancellationToken cancellationToken);
 
-        public Task<int> GetTotalTasksCount(CancellationToken cancellationToken);
+        public Task<int> GetTotalTasksCount(TaskQueryParameters parameters, CancellationToken cancellationToken);
     }
 }

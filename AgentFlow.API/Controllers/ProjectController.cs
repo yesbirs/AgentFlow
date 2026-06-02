@@ -1,13 +1,19 @@
 ﻿using AgentFlow.API.Models;
 using AgentFlow.API.Services;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using AgentFlow.API.Options;
 using System.Threading;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace AgentFlow.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
+    [Authorize]
+    [EnableRateLimiting("GlobalLimiter")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -26,6 +32,13 @@ namespace AgentFlow.API.Controllers
             if (projectQueryParameters.PageSize < 1) projectQueryParameters.PageSize = _paginationOptions.DefaultPageSize;
             if (projectQueryParameters.PageSize > _paginationOptions.MaxPageSize) projectQueryParameters.PageSize = _paginationOptions.MaxPageSize;
 
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isAdmin = User.IsInRole("Admin");
+            if (!isAdmin)
+            {
+                projectQueryParameters.CreatedByUserId = userId;
+            }
+
             var projects = await _projectService.GetAllProjects(projectQueryParameters, cancellationToken);
             return Ok(projects);
         }
@@ -40,7 +53,8 @@ namespace AgentFlow.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProjectRequest request, CancellationToken cancellationToken)
         {
-            var createdProject = await _projectService.CreateProject(request, cancellationToken);
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var createdProject = await _projectService.CreateProject(request, userId, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = createdProject.Id }, createdProject);
         }
 
@@ -52,6 +66,7 @@ namespace AgentFlow.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             await _projectService.DeleteProject(id, cancellationToken);

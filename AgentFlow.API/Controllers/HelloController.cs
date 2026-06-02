@@ -1,12 +1,12 @@
 ﻿using AgentFlow.API.Models;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgentFlow.API.Controllers
 {
-    // This tells ASP.NET: "This class handles HTTP requests"
     [ApiController]
-    // This is the route. So the full URL will be: /hello
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class HelloController : ControllerBase
     {
         // GET /hello

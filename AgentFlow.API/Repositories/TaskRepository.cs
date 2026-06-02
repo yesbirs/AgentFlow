@@ -77,6 +77,11 @@ namespace AgentFlow.API.Repositories
                 query = query.Where(t => t.ProjectId == parameters.ProjectId);
             }
 
+            if (!string.IsNullOrEmpty(parameters.CreatedByUserId))
+            {
+                query = query.Where(t => t.CreatedByUserId == parameters.CreatedByUserId);
+            }
+
             // Sorting
             query = parameters.SortBy?.ToLower() switch
             {
@@ -100,9 +105,31 @@ namespace AgentFlow.API.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<int> GetTotalTasksCount(CancellationToken cancellationToken)
+        public async Task<int> GetTotalTasksCount(TaskQueryParameters parameters, CancellationToken cancellationToken)
         {
-            return await _dbContext.Tasks.CountAsync(cancellationToken);
+            var query = _dbContext.Tasks.AsQueryable();
+
+            if (!string.IsNullOrEmpty(parameters.Status))
+            {
+                query = query.Where(t => t.Status == parameters.Status);
+            }
+
+            if (!string.IsNullOrEmpty(parameters.Priority))
+            {
+                query = query.Where(t => t.Priority == parameters.Priority);
+            }
+
+            if (parameters.ProjectId.HasValue)
+            {
+                query = query.Where(t => t.ProjectId == parameters.ProjectId);
+            }
+
+            if (!string.IsNullOrEmpty(parameters.CreatedByUserId))
+            {
+                query = query.Where(t => t.CreatedByUserId == parameters.CreatedByUserId);
+            }
+
+            return await query.CountAsync(cancellationToken);
         }
     }
 }

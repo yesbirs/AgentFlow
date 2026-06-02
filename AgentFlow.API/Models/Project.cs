@@ -12,6 +12,7 @@ namespace AgentFlow.API.Models
         public string Status { get; set; } = "active";
         public string OwnerEmail { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? CreatedByUserId { get; set; }
 
         // Navigation property for related tasks
         public List<AgentTask> Tasks { get; set; } = new List<AgentTask>();

@@ -17,6 +17,6 @@ namespace AgentFlow.API.Repositories
 
         public Task<Project?> GetProjectByIdWithTasks(Guid projectId, CancellationToken cancellationToken);
 
-        public Task<int> GetTotalProjectCounts(CancellationToken cancellationToken);
+        public Task<int> GetTotalProjectCounts(ProjectQueryParameters projectQueryParameters, CancellationToken cancellationToken);
     }
 }

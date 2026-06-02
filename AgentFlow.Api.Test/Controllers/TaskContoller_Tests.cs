@@ -52,7 +52,7 @@ public class TasksControllerTests
         };
 
         _taskServiceMock
-            .Setup(x => x.GetTaskById(taskId, It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetTaskById(taskId, It.IsAny<string?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedTask);
 
         // Act
@@ -72,7 +72,7 @@ public class TasksControllerTests
         var taskId = Guid.NewGuid();
 
         _taskServiceMock
-            .Setup(x => x.GetTaskById(taskId, It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetTaskById(taskId, It.IsAny<string?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((AgentTask?)null);
 
         // Act
@@ -105,7 +105,7 @@ public class TasksControllerTests
         };
 
         _taskServiceMock
-            .Setup(x => x.CreateTask(request, It.IsAny<CancellationToken>()))
+            .Setup(x => x.CreateTask(request, It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(createdTask);
 
         // Act
