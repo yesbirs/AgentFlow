@@ -1,0 +1,11 @@
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\bin\Debug\net8.0\AgentFlow.Domain.deps.json
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\bin\Debug\net8.0\AgentFlow.Domain.dll
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\bin\Debug\net8.0\AgentFlow.Domain.pdb
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.AssemblyInfoInputs.cache
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.AssemblyInfo.cs
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.csproj.CoreCompileInputs.cache
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.dll
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\refint\AgentFlow.Domain.dll
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\AgentFlow.Domain.pdb
+C:\Users\admin\Desktop\AgentFlow\AgentFlow\src\AgentFlow.Domain\obj\Debug\net8.0\ref\AgentFlow.Domain.dll

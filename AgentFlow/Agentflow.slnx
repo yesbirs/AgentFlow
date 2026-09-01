@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="src/AgentFlow.API/AgentFlow.API.csproj" />
+  <Project Path="src/AgentFlow.Application/AgentFlow.Application.csproj" />
+  <Project Path="src/AgentFlow.Domain/AgentFlow.Domain.csproj" />
+  <Project Path="src/AgentFlow.Infrastructure/AgentFlow.Infrastructure.csproj" />
+  <Project Path="tests/AgentFlow.Application.Tests/AgentFlow.Application.Tests.csproj" Id="44ee8e55-be75-4083-a766-7d658b3cfea5" />
+  <Project Path="tests/AgentFlow.Domain.Tests/AgentFlow.Domain.Tests.csproj" Id="c85cedfa-620a-4857-b7b7-74b681c9054c" />
+</Solution>
