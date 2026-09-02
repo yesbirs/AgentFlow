@@ -8,6 +8,8 @@ namespace AgentFlow.Application.Tests.Sessions.CreateTask;
 
 public class CreateTaskHandlerTests
 {
+    private readonly Mock<IUnitOfWork> unitOfWork = new Mock<IUnitOfWork>();
+
     [Fact]
     public async Task Creates_task_when_session_exists()
     {
@@ -24,7 +26,8 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskHandler(
             sessionRepository.Object,
-            taskRepository.Object);
+            taskRepository.Object,
+            unitOfWork.Object);
 
         var command = new CreateTaskCommand(
             sessionId,
@@ -62,7 +65,8 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskHandler(
             sessionRepository.Object,
-            taskRepository.Object);
+            taskRepository.Object,
+            unitOfWork.Object);
 
         var command = new CreateTaskCommand(
             sessionId,
@@ -102,7 +106,7 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskHandler(
             sessionRepository.Object,
-            taskRepository.Object);
+            taskRepository.Object, unitOfWork.Object);
 
         var command = new CreateTaskCommand(
             sessionId,
@@ -136,7 +140,8 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskHandler(
             sessionRepository.Object,
-            taskRepository.Object);
+            taskRepository.Object,
+            unitOfWork.Object);
 
         var command = new CreateTaskCommand(
             sessionId,
@@ -190,7 +195,8 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskDependencyHandler(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            unitOfWork.Object);
 
         var command = new CreateTaskDependencyCommand(
             taskId,
@@ -243,7 +249,8 @@ public class CreateTaskHandlerTests
 
         var handler = new CreateTaskDependencyHandler(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            unitOfWork.Object);
 
         var command = new CreateTaskDependencyCommand(
             task.Id,

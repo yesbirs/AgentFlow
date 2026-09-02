@@ -10,5 +10,7 @@ namespace AgentFlow.Application.Abstractions.Persistence
     public interface ITaskDependencyRepository
     {
         Task AddAsync(TaskDependency taskDependency, CancellationToken cancellationToken = default);
+
+        Task<IReadOnlyList<Guid>> GetDependencyTaskIdsAsync(Guid taskId, CancellationToken cancellationToken = default);
     }
 }

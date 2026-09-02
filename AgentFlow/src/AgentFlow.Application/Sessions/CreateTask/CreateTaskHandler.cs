@@ -7,13 +7,16 @@ public sealed class CreateTaskHandler
 {
     private readonly ISessionRepository _sessionRepository;
     private readonly IAgentTaskRepository _taskRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateTaskHandler(
         ISessionRepository sessionRepository,
-        IAgentTaskRepository taskRepository)
+        IAgentTaskRepository taskRepository,
+        IUnitOfWork unitOfWork)
     {
         _sessionRepository = sessionRepository;
         _taskRepository = taskRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<AgentTask> Handle(
@@ -62,6 +65,7 @@ public sealed class CreateTaskHandler
         await _taskRepository.AddAsync(
             task,
             cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return task;
     }

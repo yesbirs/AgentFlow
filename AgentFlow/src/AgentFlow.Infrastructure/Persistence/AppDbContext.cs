@@ -1,4 +1,5 @@
-﻿using AgentFlow.Domain.Entities;
+﻿using AgentFlow.Application.Abstractions.Persistence;
+using AgentFlow.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AgentFlow.Infrastructure.Persistence
 {
-    public sealed class AppDbContext : DbContext
+    public sealed class AppDbContext : DbContext, IUnitOfWork
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

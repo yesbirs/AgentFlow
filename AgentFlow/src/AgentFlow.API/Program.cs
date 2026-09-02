@@ -1,11 +1,15 @@
 using AgentFlow.API.Endpoints;
 using AgentFlow.API.ExceptionHandling;
+using AgentFlow.Application.Abstractions.Persistence;
 using AgentFlow.Application.Planning;
+using AgentFlow.Application.Scheduling;
 using AgentFlow.Application.Sessions.CreateSession;
 using AgentFlow.Application.Sessions.CreateTask;
 using AgentFlow.Application.Sessions.GetSessionById;
 using AgentFlow.Application.Sessions.GetSessions;
+using AgentFlow.Application.Sessions.PlanSession;
 using AgentFlow.Infrastructure;
+using AgentFlow.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +33,12 @@ builder.Services.AddScoped<CreateTaskHandler>();
 builder.Services.AddScoped<IPlanner, FakePlanner>();
 builder.Services.AddScoped<PlanValidator>();
 builder.Services.AddScoped<PlanApplicationService>();
+builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+builder.Services.AddScoped<PlanSessionHandler>();
 //Exception handling middleware can be added here
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddScoped<IScheduler, Scheduler>();
+builder.Services.AddScoped<TaskDispatcher>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddSwaggerGen();

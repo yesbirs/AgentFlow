@@ -7,13 +7,16 @@ public sealed class CreateTaskDependencyHandler
 {
     private readonly IAgentTaskRepository _taskRepository;
     private readonly ITaskDependencyRepository _dependencyRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateTaskDependencyHandler(
         IAgentTaskRepository taskRepository,
-        ITaskDependencyRepository dependencyRepository)
+        ITaskDependencyRepository dependencyRepository,
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _dependencyRepository = dependencyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<TaskDependency> Handle(
@@ -56,6 +59,7 @@ public sealed class CreateTaskDependencyHandler
         await _dependencyRepository.AddAsync(
             dependency,
             cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return dependency;
     }

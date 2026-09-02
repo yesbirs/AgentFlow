@@ -16,7 +16,7 @@ namespace AgentFlow.Infrastructure.Persistence
         public async Task AddAsync(Session session, CancellationToken cancellationToken = default)
         {
             await _dbContext.Sessions.AddAsync(session, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Session?> GetSessionByIdAsync(Guid sessionId, CancellationToken cancellationToken = default)

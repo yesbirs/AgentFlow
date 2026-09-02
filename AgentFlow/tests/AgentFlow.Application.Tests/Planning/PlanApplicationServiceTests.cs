@@ -7,6 +7,8 @@ namespace AgentFlow.Application.Tests.Planning;
 
 public class PlanApplicationServiceTests
 {
+    private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();
+
     [Fact]
     public async Task Applies_plan_and_creates_all_tasks()
     {
@@ -35,7 +37,8 @@ public class PlanApplicationServiceTests
 
         var service = new PlanApplicationService(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            _unitOfWork.Object);
 
         var result = await service.ApplyAsync(
             sessionId,
@@ -89,7 +92,8 @@ public class PlanApplicationServiceTests
 
         var service = new PlanApplicationService(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            _unitOfWork.Object);
 
         var result = await service.ApplyAsync(
             sessionId,
@@ -142,7 +146,8 @@ public class PlanApplicationServiceTests
 
         var service = new PlanApplicationService(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            _unitOfWork.Object);
 
         var result = await service.ApplyAsync(
             sessionId,
@@ -190,7 +195,8 @@ public class PlanApplicationServiceTests
 
         var service = new PlanApplicationService(
             taskRepository.Object,
-            dependencyRepository.Object);
+            dependencyRepository.Object,
+            _unitOfWork.Object);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => service.ApplyAsync(

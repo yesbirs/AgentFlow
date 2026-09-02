@@ -1,5 +1,6 @@
 ﻿using AgentFlow.Application.Abstractions.Persistence;
 using AgentFlow.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,14 @@ namespace AgentFlow.Infrastructure.Persistence
         public async Task AddAsync(TaskDependency taskDependency, CancellationToken cancellationToken)
         {
             await _context.TaskDependencies.AddAsync(taskDependency, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Guid>> GetDependencyTaskIdsAsync(Guid taskId, CancellationToken cancellationToken = default)
+        {
+            return await _context.TaskDependencies
+                .Where(dependency => dependency.TaskId == taskId)
+                .Select(dependency => dependency.DependsOnTaskId)
+                .ToListAsync(cancellationToken);
         }
     }
 }

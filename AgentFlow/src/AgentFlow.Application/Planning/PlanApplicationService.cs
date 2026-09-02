@@ -7,13 +7,16 @@ public sealed class PlanApplicationService
 {
     private readonly IAgentTaskRepository _taskRepository;
     private readonly ITaskDependencyRepository _dependencyRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public PlanApplicationService(
         IAgentTaskRepository taskRepository,
-        ITaskDependencyRepository dependencyRepository)
+        ITaskDependencyRepository dependencyRepository,
+        IUnitOfWork unitOfWork)
     {
         _taskRepository = taskRepository;
         _dependencyRepository = dependencyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IReadOnlyList<AgentTask>> ApplyAsync(
@@ -67,6 +70,7 @@ public sealed class PlanApplicationService
                 cancellationToken);
         }
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return createdTasks;
     }
 

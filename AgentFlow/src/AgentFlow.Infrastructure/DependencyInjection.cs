@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AgentFlow.Application.Abstractions.Persistence;
+using AgentFlow.Application.Abstractions.Queue;
+using AgentFlow.Application.Execution;
+using AgentFlow.Infrastructure.Execution;
+using AgentFlow.Infrastructure.Persistence;
+using AgentFlow.Infrastructure.Queue;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AgentFlow.Infrastructure.Persistence;
-using AgentFlow.Application.Abstractions.Persistence;
 
 namespace AgentFlow.Infrastructure;
 
@@ -19,6 +23,9 @@ public static class DependencyInjection
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IAgentTaskRepository, AgentTaskRepository>();
         services.AddScoped<ITaskDependencyRepository, TaskDependencyRepository>();
+        services.AddSingleton<IWorkQueue, InMemoryWorkQueue>();
+        services.AddScoped<ITaskExecutor, FakeTaskExecutor>();
+        services.AddScoped<TaskWorker>();
 
         return services;
     }

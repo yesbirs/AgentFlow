@@ -1,6 +1,7 @@
 ﻿using AgentFlow.Application.Sessions.CreateSession;
 using AgentFlow.Application.Sessions.GetSessionById;
 using AgentFlow.Application.Sessions.GetSessions;
+using AgentFlow.Application.Sessions.PlanSession;
 
 namespace AgentFlow.API.Endpoints
 {
@@ -45,6 +46,18 @@ namespace AgentFlow.API.Endpoints
                 {
                     var sessions = await handler.Handle(new GetSessionsQuery(), cancellationToken);
                     return Results.Ok(sessions);
+                });
+            endpoints.MapPost("api/sessions/{sessionId:guid}/plan",
+                async (
+                    Guid sessionId,
+                    PlanSessionHandler handler,
+                    CancellationToken cancellationToken) =>
+                {
+                    var command = new PlanSessionCommand(sessionId);
+
+                    var tasks = await handler.Handle(command, cancellationToken);
+
+                    return Results.Ok(tasks);
                 });
 
             return endpoints;
