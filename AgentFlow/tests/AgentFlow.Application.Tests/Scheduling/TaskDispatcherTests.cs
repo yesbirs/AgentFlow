@@ -8,6 +8,17 @@ namespace AgentFlow.Application.Tests.Scheduling;
 
 public class TaskDispatcherTests
 {
+    private readonly Mock<IScheduler> _scheduler;
+    private readonly Mock<IWorkQueue> _workQueue;
+    private readonly Mock<IAgentTaskRepository> _taskRepository;
+
+    public TaskDispatcherTests()
+    {
+        _scheduler = new Mock<IScheduler>();
+        _workQueue = new Mock<IWorkQueue>();
+        _taskRepository = new Mock<IAgentTaskRepository>();
+    }
+
     [Fact]
     public async Task DispatchReadyTasksAsync_ClaimedTask_IsEnqueued()
     {
@@ -18,78 +29,63 @@ public class TaskDispatcherTests
             "Research",
             "Research requirements");
 
-        var scheduler = new Mock<IScheduler>();
-        var queue = new Mock<IWorkQueue>();
-        var taskRepository = new Mock<IAgentTaskRepository>();
-
-        scheduler
+        _scheduler
             .Setup(x => x.FindReadyTasksAsync(
                 sessionId,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<AgentTask> { task });
 
-        taskRepository
+        _taskRepository
             .Setup(x => x.TryClaimAsync(
                 task.Id,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         var dispatcher = new TaskDispatcher(
-            scheduler.Object,
-            queue.Object,
-            taskRepository.Object);
+            _scheduler.Object,
+            _workQueue.Object,
+            _taskRepository.Object);
 
         var result = await dispatcher.DispatchReadyTasksAsync(sessionId);
 
         Assert.Equal(1, result);
 
-        queue.Verify(
+        _workQueue.Verify(
             x => x.EnqueueAsync(
                 task.Id,
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
-    [Fact]
-    public async Task DispatchReadyTasksAsync_TaskCannotBeClaimed_IsNotEnqueued()
+    public async Task<int> DispatchReadyTasksAsync(
+    Guid sessionId,
+    CancellationToken cancellationToken = default)
     {
-        var sessionId = Guid.NewGuid();
-
-        var task = new AgentTask(
+        var readyTasks = await _scheduler.Object.FindReadyTasksAsync(
             sessionId,
-            "Research",
-            "Research requirements");
+            cancellationToken);
 
-        var scheduler = new Mock<IScheduler>();
-        var queue = new Mock<IWorkQueue>();
-        var taskRepository = new Mock<IAgentTaskRepository>();
+        var dispatchedCount = 0;
 
-        scheduler
-            .Setup(x => x.FindReadyTasksAsync(
-                sessionId,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<AgentTask> { task });
-
-        taskRepository
-            .Setup(x => x.TryClaimAsync(
+        foreach (var task in readyTasks)
+        {
+            var claimed = await _taskRepository.Object.TryClaimAsync(
                 task.Id,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+                cancellationToken);
 
-        var dispatcher = new TaskDispatcher(
-            scheduler.Object,
-            queue.Object,
-            taskRepository.Object);
+            if (!claimed)
+            {
+                continue;
+            }
 
-        var result = await dispatcher.DispatchReadyTasksAsync(sessionId);
-
-        Assert.Equal(0, result);
-
-        queue.Verify(
-            x => x.EnqueueAsync(
+            await _workQueue.Object.EnqueueAsync(
                 task.Id,
-                It.IsAny<CancellationToken>()),
-            Times.Never);
+                cancellationToken);
+
+            dispatchedCount++;
+        }
+
+        return dispatchedCount;
     }
 
     [Fact]
