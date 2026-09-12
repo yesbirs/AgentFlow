@@ -6,17 +6,22 @@ using Moq;
 
 namespace AgentFlow.Application.Tests.Scheduling;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Application.Scheduling.TaskDispatcher"/> ensuring tasks are claimed and dispatched.
+/// </summary>
 public class TaskDispatcherTests
 {
     private readonly Mock<IScheduler> _scheduler;
-    private readonly Mock<IWorkQueue> _workQueue;
     private readonly Mock<IAgentTaskRepository> _taskRepository;
+    private readonly Mock<IOutboxMessageRepository> _outboxRepository;
+    private readonly Mock<IUnitOfWork> _unitOfWork;
 
     public TaskDispatcherTests()
     {
         _scheduler = new Mock<IScheduler>();
-        _workQueue = new Mock<IWorkQueue>();
         _taskRepository = new Mock<IAgentTaskRepository>();
+        _outboxRepository = new Mock<IOutboxMessageRepository>();
+        _unitOfWork = new Mock<IUnitOfWork>();
     }
 
     [Fact]
@@ -43,18 +48,13 @@ public class TaskDispatcherTests
 
         var dispatcher = new TaskDispatcher(
             _scheduler.Object,
-            _workQueue.Object,
-            _taskRepository.Object);
+            _taskRepository.Object,
+            _outboxRepository.Object,
+            _unitOfWork.Object);
 
         var result = await dispatcher.DispatchReadyTasksAsync(sessionId);
 
         Assert.Equal(1, result);
-
-        _workQueue.Verify(
-            x => x.EnqueueAsync(
-                task.Id,
-                It.IsAny<CancellationToken>()),
-            Times.Once);
     }
 
     public async Task<int> DispatchReadyTasksAsync(
@@ -77,10 +77,6 @@ public class TaskDispatcherTests
             {
                 continue;
             }
-
-            await _workQueue.Object.EnqueueAsync(
-                task.Id,
-                cancellationToken);
 
             dispatchedCount++;
         }
@@ -109,7 +105,6 @@ public class TaskDispatcherTests
             "Implement solution");
 
         var scheduler = new Mock<IScheduler>();
-        var queue = new Mock<IWorkQueue>();
         var taskRepository = new Mock<IAgentTaskRepository>();
 
         scheduler
@@ -132,17 +127,12 @@ public class TaskDispatcherTests
 
         var dispatcher = new TaskDispatcher(
             scheduler.Object,
-            queue.Object,
-            taskRepository.Object);
+            taskRepository.Object,
+            _outboxRepository.Object,
+            _unitOfWork.Object);
 
         var result = await dispatcher.DispatchReadyTasksAsync(sessionId);
 
         Assert.Equal(3, result);
-
-        queue.Verify(
-            x => x.EnqueueAsync(
-                It.IsAny<Guid>(),
-                It.IsAny<CancellationToken>()),
-            Times.Exactly(3));
     }
 }

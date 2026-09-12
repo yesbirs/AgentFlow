@@ -1,6 +1,8 @@
 using AgentFlow.API.Endpoints;
 using AgentFlow.API.ExceptionHandling;
 using AgentFlow.Application.Abstractions.Persistence;
+using AgentFlow.Application.Execution;
+using AgentFlow.Application.Outbox;
 using AgentFlow.Application.Planning;
 using AgentFlow.Application.Scheduling;
 using AgentFlow.Application.Sessions.CreateSession;
@@ -39,6 +41,9 @@ builder.Services.AddScoped<PlanSessionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddScoped<IScheduler, Scheduler>();
 builder.Services.AddScoped<TaskDispatcher>();
+builder.Services.AddScoped<OutboxProcessor>();
+builder.Services.AddScoped<RetryPolicy>(
+    _ => new RetryPolicy(3));
 builder.Services.AddProblemDetails();
 
 builder.Services.AddSwaggerGen();

@@ -1,0 +1,22 @@
+{
+  "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "agentflowns",
+        "Queues": [
+          {
+            "Name": "agentflow-tasks",
+            "Properties": {
+              "DeadLetteringOnMessageExpiration": false,
+              "DefaultMessageTimeToLive": "PT1H",
+              "DuplicateDetectionHistoryTimeWindow": "PT20S"
+            }
+          }
+        ]
+      }
+    ],
+    "Logging": {
+      "Type": "File"
+    }
+  }
+}

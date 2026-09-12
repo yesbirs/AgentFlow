@@ -1,7 +1,13 @@
 ﻿namespace AgentFlow.Application.Planning;
 
+/// <summary>
+/// A simple in-memory planner used for testing and examples that generates a fixed plan based on the prompt.
+/// </summary>
 public sealed class FakePlanner : IPlanner
 {
+    /// <summary>
+    /// Produces a deterministic planning result from the provided prompt.
+    /// </summary>
     public Task<PlanningResult> CreatePlanAsync(
         string prompt,
         CancellationToken cancellationToken = default)

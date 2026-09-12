@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace AgentFlow.Infrastructure.Persistence.Configurations
 {
-    public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
+public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
     {
+        /// <summary>
+        /// Configures EF Core mappings for the Session entity.
+        /// </summary>
         public void Configure(EntityTypeBuilder<Session> builder)
         {
             builder.ToTable("Sessions");

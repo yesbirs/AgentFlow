@@ -5,8 +5,14 @@ using AgentFlow.Application.Sessions.PlanSession;
 
 namespace AgentFlow.API.Endpoints
 {
+    /// <summary>
+    /// Maps HTTP endpoints related to session operations (create, retrieve, list, plan).
+    /// </summary>
     public static class SessionEndpoints
     {
+        /// <summary>
+        /// Registers session related endpoints on the provided <see cref="IEndpointRouteBuilder"/>.
+        /// </summary>
         public static IEndpointRouteBuilder MapSessionEndpoints(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapPost(

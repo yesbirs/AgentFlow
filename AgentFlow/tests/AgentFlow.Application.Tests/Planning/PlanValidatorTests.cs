@@ -2,6 +2,9 @@
 
 namespace AgentFlow.Application.Tests.Planning;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Application.Planning.PlanValidator"/> ensuring plans are structurally valid.
+/// </summary>
 public class PlanValidatorTests
 {
     [Fact]

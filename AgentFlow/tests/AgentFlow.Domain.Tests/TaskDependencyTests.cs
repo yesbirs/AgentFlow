@@ -2,6 +2,9 @@
 
 namespace AgentFlow.Domain.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Domain.Entities.TaskDependency"/> constructor validation and invariants.
+/// </summary>
 public class TaskDependencyTests
 {
     [Fact]

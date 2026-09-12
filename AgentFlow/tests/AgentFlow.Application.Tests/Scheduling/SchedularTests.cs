@@ -6,6 +6,9 @@ using Moq;
 
 namespace AgentFlow.Application.Tests.Scheduling;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Application.Scheduling.Scheduler"/> ensuring correct ready-task selection.
+/// </summary>
 public class SchedulerTests
 {
     [Fact]

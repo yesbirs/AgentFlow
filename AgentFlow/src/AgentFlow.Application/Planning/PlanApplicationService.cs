@@ -3,12 +3,18 @@ using AgentFlow.Domain.Entities;
 
 namespace AgentFlow.Application.Planning;
 
+/// <summary>
+/// Service responsible for applying a planning result to the data model by creating tasks and dependencies.
+/// </summary>
 public sealed class PlanApplicationService
 {
     private readonly IAgentTaskRepository _taskRepository;
     private readonly ITaskDependencyRepository _dependencyRepository;
     private readonly IUnitOfWork _unitOfWork;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="PlanApplicationService"/>.
+    /// </summary>
     public PlanApplicationService(
         IAgentTaskRepository taskRepository,
         ITaskDependencyRepository dependencyRepository,
@@ -19,6 +25,10 @@ public sealed class PlanApplicationService
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// Creates tasks and dependencies from the provided planning result for the given session.
+    /// Returns the list of created <see cref="AgentTask"/> instances.
+    /// </summary>
     public async Task<IReadOnlyList<AgentTask>> ApplyAsync(
         Guid sessionId,
         PlanningResult plan,
@@ -74,6 +84,10 @@ public sealed class PlanApplicationService
         return createdTasks;
     }
 
+    /// <summary>
+    /// Resolves a planned task's parent id using the map of created task ids.
+    /// Throws when the parent key is missing in the provided map.
+    /// </summary>
     private static Guid? ResolveParentTaskId(
         PlannedTask plannedTask,
         Dictionary<string, Guid> taskIds)

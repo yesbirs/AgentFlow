@@ -7,6 +7,9 @@ namespace AgentFlow.Infrastructure.Persistence.Configurations;
 public sealed class TaskDependencyConfiguration
     : IEntityTypeConfiguration<TaskDependency>
 {
+    /// <summary>
+    /// Configures EF Core mappings for the TaskDependency entity.
+    /// </summary>
     public void Configure(
         EntityTypeBuilder<TaskDependency> builder)
     {

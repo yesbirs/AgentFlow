@@ -6,6 +6,9 @@ using Moq;
 
 namespace AgentFlow.Application.Tests.Sessions.PlanSession;
 
+/// <summary>
+/// Unit tests for the <see cref="AgentFlow.Application.Sessions.PlanSession.PlanSessionHandler"/>.
+/// </summary>
 public class PlanSessionHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();

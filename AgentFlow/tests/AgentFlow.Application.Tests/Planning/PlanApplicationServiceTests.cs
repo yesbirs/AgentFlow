@@ -5,6 +5,9 @@ using Moq;
 
 namespace AgentFlow.Application.Tests.Planning;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Application.Planning.PlanApplicationService"/> behavior.
+/// </summary>
 public class PlanApplicationServiceTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();

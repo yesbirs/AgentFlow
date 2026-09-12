@@ -6,6 +6,9 @@ namespace AgentFlow.Infrastructure.Persistence.Configurations;
 
 public sealed class AgentTaskConfiguration : IEntityTypeConfiguration<AgentTask>
 {
+    /// <summary>
+    /// Configures EF Core mappings for the AgentTask entity.
+    /// </summary>
     public void Configure(
         EntityTypeBuilder<AgentTask> builder)
     {

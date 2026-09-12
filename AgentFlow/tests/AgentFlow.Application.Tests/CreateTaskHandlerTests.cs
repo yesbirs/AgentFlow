@@ -6,6 +6,9 @@ using Moq;
 
 namespace AgentFlow.Application.Tests.Sessions.CreateTask;
 
+/// <summary>
+/// Unit tests for create-task and create-task-dependency handlers covering validation and persistence behavior.
+/// </summary>
 public class CreateTaskHandlerTests
 {
     private readonly Mock<IUnitOfWork> unitOfWork = new Mock<IUnitOfWork>();

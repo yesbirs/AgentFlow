@@ -1,7 +1,13 @@
 ﻿namespace AgentFlow.Application.Planning;
 
+/// <summary>
+/// Validates a <see cref="PlanningResult"/> for completeness and structural correctness.
+/// </summary>
 public sealed class PlanValidator
 {
+    /// <summary>
+    /// Validates the provided plan, throwing <see cref="InvalidOperationException"/> when invalid.
+    /// </summary>
     public void Validate(PlanningResult plan)
     {
         ArgumentNullException.ThrowIfNull(plan);
@@ -12,6 +18,10 @@ public sealed class PlanValidator
         ValidateNoCycles(plan);
     }
 
+    /// <summary>
+    /// Ensures every task in the plan has a non-empty key, unique keys, a title and a description.
+    /// Throws <see cref="InvalidOperationException"/> when a validation rule fails.
+    /// </summary>
     private static void ValidateTasks(PlanningResult plan)
     {
         var keys = new HashSet<string>(
@@ -45,6 +55,9 @@ public sealed class PlanValidator
         }
     }
 
+    /// <summary>
+    /// Ensures parent keys (when provided) refer to existing tasks and that a task is not its own parent.
+    /// </summary>
     private static void ValidateParents(PlanningResult plan)
     {
         var taskKeys = plan.Tasks
@@ -76,6 +89,9 @@ public sealed class PlanValidator
         }
     }
 
+    /// <summary>
+    /// Validates that each declared dependency references existing tasks and that no task depends on itself.
+    /// </summary>
     private static void ValidateDependencies(
         PlanningResult plan)
     {
@@ -113,6 +129,9 @@ public sealed class PlanValidator
         }
     }
 
+    /// <summary>
+    /// Builds a dependency graph and ensures there are no cycles using depth-first search.
+    /// </summary>
     private static void ValidateNoCycles(PlanningResult plan)
     {
         var graph = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
@@ -142,6 +161,10 @@ public sealed class PlanValidator
         }
     }
 
+    /// <summary>
+    /// Performs a DFS from the specified task key to detect cycles. Returns true when a cycle is found.
+    /// - Uses <c>visiting</c> to track the current recursion stack and <c>visited</c> for fully explored nodes.
+    /// </summary>
     private static bool HasCycle(string taskKey, Dictionary<string, List<string>> graph, HashSet<string> visiting, HashSet<string> visited)
     {
         if (visiting.Contains(taskKey))

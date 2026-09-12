@@ -3,6 +3,9 @@ using AgentFlow.Domain.Enums;
 
 namespace AgentFlow.Domain.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="AgentFlow.Domain.Entities.AgentTask"/> lifecycle and validation behavior.
+/// </summary>
 public class AgentTaskTests
 {
     [Fact]
@@ -165,5 +168,40 @@ public class AgentTaskTests
                 Guid.NewGuid(),
                 "Test task",
                 ""));
+    }
+
+    [Fact]
+    public void Start_FirstAttempt_IncrementsAttemptCount()
+    {
+        var task = new AgentTask(
+            Guid.NewGuid(),
+            "Research",
+            "Research requirements");
+
+        task.Queue();
+        task.Start();
+
+        Assert.Equal(1, task.AttemptCount);
+    }
+
+    [Fact]
+    public void Retry_AfterFailure_QueuesTaskAgain()
+    {
+        var task = new AgentTask(
+            Guid.NewGuid(),
+            "Research",
+            "Research requirements");
+
+        task.Queue();
+        task.Start();
+        task.Fail();
+
+        task.Retry();
+
+        Assert.Equal(
+            TaskState.Queued,
+            task.State);
+
+        Assert.Equal(1, task.AttemptCount);
     }
 }

@@ -2,7 +2,10 @@
 
 public interface IWorkQueue
 {
-    Task EnqueueAsync(Guid taskId, CancellationToken cancellationToken = default);
+    Task EnqueueAsync(
+        Guid taskId,
+        CancellationToken cancellationToken = default);
 
-    Task<Guid> DequeueAsync(CancellationToken cancellationToken = default);
+    Task<IWorkItem?> ReceiveAsync(
+        CancellationToken cancellationToken = default);
 }
