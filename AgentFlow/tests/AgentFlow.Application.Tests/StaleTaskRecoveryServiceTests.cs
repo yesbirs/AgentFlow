@@ -114,6 +114,11 @@ public sealed class StaleTaskRecoveryServiceTests
             Guid taskId,
             CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
+
+        public Task<IReadOnlyList<AgentTask>> GetBySessionIdAsync(Guid sessionId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private sealed class FakeUnitOfWork : IUnitOfWork

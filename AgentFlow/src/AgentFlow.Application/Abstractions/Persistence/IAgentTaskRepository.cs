@@ -35,4 +35,9 @@ public interface IAgentTaskRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<IReadOnlyList<AgentTask>> GetStaleRunningTasksAsync(DateTime cutoff, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets tasks associated with a specific session.
+    /// </summary>
+    Task<IReadOnlyList<AgentTask>> GetBySessionIdAsync(Guid sessionId, CancellationToken cancellationToken = default);
 }

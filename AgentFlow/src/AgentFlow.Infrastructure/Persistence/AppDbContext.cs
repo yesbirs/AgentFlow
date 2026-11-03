@@ -49,6 +49,8 @@ namespace AgentFlow.Infrastructure.Persistence
         /// </summary>
         public DbSet<TaskResult> TaskResults => Set<TaskResult>();
 
+        public DbSet<SessionResult> SessionResults => Set<SessionResult>();
+
         /// <summary>
         /// Begins a database transaction.
         /// </summary>

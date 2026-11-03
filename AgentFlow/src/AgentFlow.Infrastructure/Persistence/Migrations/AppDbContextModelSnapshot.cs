@@ -116,6 +116,31 @@ namespace AgentFlow.Infrastructure.Persistence.Migrations
                     b.ToTable("Sessions", (string)null);
                 });
 
+            modelBuilder.Entity("AgentFlow.Domain.Entities.SessionResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("SessionResults", (string)null);
+                });
+
             modelBuilder.Entity("AgentFlow.Domain.Entities.TaskDependency", b =>
                 {
                     b.Property<Guid>("Id")
@@ -175,6 +200,15 @@ namespace AgentFlow.Infrastructure.Persistence.Migrations
 
                     b.HasOne("AgentFlow.Domain.Entities.Session", null)
                         .WithMany("Tasks")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AgentFlow.Domain.Entities.SessionResult", b =>
+                {
+                    b.HasOne("AgentFlow.Domain.Entities.Session", null)
+                        .WithMany()
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

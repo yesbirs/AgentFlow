@@ -8,6 +8,7 @@ using AgentFlow.Infrastructure.Execution;
 using AgentFlow.Infrastructure.LLM;
 using AgentFlow.Infrastructure.Persistence;
 using AgentFlow.Infrastructure.Persistence.Repositories;
+using AgentFlow.Infrastructure.Planning;
 using AgentFlow.Infrastructure.Queue;
 using AgentFlow.Infrastructure.Time;
 using AgentFlow.Infrastructure.Workers;
@@ -45,6 +46,8 @@ public static class DependencyInjection
         services.AddSingleton<IClock, SystemClock>();
         services.AddHostedService<StaleTaskRecoveryBackgroundWorker>();
         services.AddScoped<ITaskResultRepository, TaskResultRepository>();
+        services.AddScoped<ISessionResultRepository, SessionResultRepository>();
+        services.AddScoped<ISessionResultGenerator, OllamaSessionResultGenerator>();
 
         return services;
     }

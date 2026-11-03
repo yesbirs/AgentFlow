@@ -2,6 +2,7 @@
 using AgentFlow.Application.Sessions.GetSessionById;
 using AgentFlow.Application.Sessions.GetSessions;
 using AgentFlow.Application.Sessions.PlanSession;
+using AgentFlow.Application.Sessions.Queries;
 
 namespace AgentFlow.API.Endpoints
 {
@@ -65,7 +66,20 @@ namespace AgentFlow.API.Endpoints
 
                     return Results.Ok(tasks);
                 });
+            endpoints.MapGet("/api/sessions/{sessionId:guid}/tasks",
+                async (
+                    Guid sessionId,
+                    GetSessionTasksHandler handler,
+                    CancellationToken cancellationToken) =>
+                {
+                    var result = await handler.HandleAsync(
+                        sessionId,
+                        cancellationToken);
 
+                    return result is null
+                        ? Results.NotFound()
+                        : Results.Ok(result);
+                });
             return endpoints;
         }
     }

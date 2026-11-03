@@ -99,5 +99,21 @@ namespace AgentFlow.Infrastructure.Persistence.Repositories
                     task.UpdatedAt < cutoff)
                 .ToListAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Gets tasks associated with a specific session.
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<IReadOnlyList<AgentTask>> GetBySessionIdAsync(Guid sessionId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Tasks
+                .AsNoTracking()
+                .Where(task => task.SessionId == sessionId)
+                .OrderBy(task => task.CreatedAt)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

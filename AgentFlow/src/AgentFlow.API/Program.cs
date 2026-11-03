@@ -8,11 +8,13 @@ using AgentFlow.Application.Execution.Context;
 using AgentFlow.Application.Outbox;
 using AgentFlow.Application.Planning;
 using AgentFlow.Application.Scheduling;
+using AgentFlow.Application.Sessions.Commands;
 using AgentFlow.Application.Sessions.CreateSession;
 using AgentFlow.Application.Sessions.CreateTask;
 using AgentFlow.Application.Sessions.GetSessionById;
 using AgentFlow.Application.Sessions.GetSessions;
 using AgentFlow.Application.Sessions.PlanSession;
+using AgentFlow.Application.Sessions.Queries;
 using AgentFlow.Infrastructure;
 using AgentFlow.Infrastructure.LLM;
 using AgentFlow.Infrastructure.Persistence;
@@ -32,7 +34,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-
+builder.Services.AddScoped<GetSessionTasksHandler>();
+builder.Services.AddScoped<FinalizeSessionHandler>();
 builder.Services.AddScoped<CreateSessionHandler>();
 builder.Services.AddScoped<GetSessionByIdHandler>();
 builder.Services.AddScoped<GetSessionsHandler>();
