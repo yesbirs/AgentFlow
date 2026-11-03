@@ -1,8 +1,11 @@
-﻿using AgentFlow.Application.Abstractions.Persistence;
+﻿using AgentFlow.API.BackgroundWorkers;
+using AgentFlow.Application.Abstractions.LLM;
+using AgentFlow.Application.Abstractions.Persistence;
 using AgentFlow.Application.Abstractions.Queue;
 using AgentFlow.Application.Abstractions.Time;
 using AgentFlow.Application.Execution;
 using AgentFlow.Infrastructure.Execution;
+using AgentFlow.Infrastructure.LLM;
 using AgentFlow.Infrastructure.Persistence;
 using AgentFlow.Infrastructure.Persistence.Repositories;
 using AgentFlow.Infrastructure.Queue;
@@ -32,7 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IAgentTaskRepository, AgentTaskRepository>();
         services.AddScoped<ITaskDependencyRepository, TaskDependencyRepository>();
         services.AddSingleton<IWorkQueue, AzureServiceBusWorkQueue>();
-        services.AddScoped<ITaskExecutor, FakeTaskExecutor>();
+        services.AddScoped<ITaskExecutor, LlmTaskExecutor>();
         services.AddScoped<TaskWorker>();
         services.AddHostedService<AgentTaskBackgroundWorker>();
         services.AddHostedService<SchedulerBackgroundWorker>();
@@ -40,6 +43,9 @@ public static class DependencyInjection
         services.AddSingleton<IMessagePublisher, AzureServiceBusMessagePublisher>();
         services.AddHostedService<OutboxBackgroundWorker>();
         services.AddSingleton<IClock, SystemClock>();
+        services.AddHostedService<StaleTaskRecoveryBackgroundWorker>();
+        services.AddScoped<ITaskResultRepository, TaskResultRepository>();
+
         return services;
     }
 }

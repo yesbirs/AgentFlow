@@ -141,6 +141,31 @@ namespace AgentFlow.Infrastructure.Persistence.Migrations
                     b.ToTable("TaskDependencies", (string)null);
                 });
 
+            modelBuilder.Entity("AgentFlow.Domain.Entities.TaskResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("TaskResults", (string)null);
+                });
+
             modelBuilder.Entity("AgentFlow.Domain.Entities.AgentTask", b =>
                 {
                     b.HasOne("AgentFlow.Domain.Entities.AgentTask", null)
@@ -163,6 +188,15 @@ namespace AgentFlow.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AgentFlow.Domain.Entities.AgentTask", null)
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AgentFlow.Domain.Entities.TaskResult", b =>
+                {
                     b.HasOne("AgentFlow.Domain.Entities.AgentTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")

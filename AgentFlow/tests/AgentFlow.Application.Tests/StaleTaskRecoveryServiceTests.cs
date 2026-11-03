@@ -20,6 +20,7 @@ public sealed class StaleTaskRecoveryServiceTests
         await service.RecoverAsync();
 
         Assert.Equal(TaskState.Queued, task.State);
+
         Assert.Equal(1, unitOfWork.SaveChangesCount);
     }
 
@@ -77,6 +78,7 @@ public sealed class StaleTaskRecoveryServiceTests
     {
         return new StaleTaskRecoveryService(
             repository,
+            new FakeOutboxMessageRepository(),
             unitOfWork,
             retryPolicy,
             new FakeClock { UtcNow = DateTime.UtcNow });

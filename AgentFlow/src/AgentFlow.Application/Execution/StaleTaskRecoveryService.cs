@@ -1,6 +1,9 @@
 ﻿using AgentFlow.Application.Abstractions.Persistence;
+using AgentFlow.Application.Abstractions.Queue;
 using AgentFlow.Application.Abstractions.Time;
+using AgentFlow.Domain.Entities;
 using AgentFlow.Domain.Enums;
+using System.Text.Json;
 
 namespace AgentFlow.Application.Execution;
 
@@ -12,14 +15,17 @@ public sealed class StaleTaskRecoveryService
 
     private readonly TimeSpan _staleThreshold;
     private readonly IClock _clock;
+    private readonly IOutboxMessageRepository _outboxRepository;
 
     public StaleTaskRecoveryService(
-        IAgentTaskRepository taskRepository,
-        IUnitOfWork unitOfWork,
-        RetryPolicy retryPolicy,
-        IClock clock)
+    IAgentTaskRepository taskRepository,
+    IOutboxMessageRepository outboxRepository,
+    IUnitOfWork unitOfWork,
+    RetryPolicy retryPolicy,
+    IClock clock)
     {
         _taskRepository = taskRepository;
+        _outboxRepository = outboxRepository;
         _unitOfWork = unitOfWork;
         _retryPolicy = retryPolicy;
         _clock = clock;
@@ -44,6 +50,17 @@ public sealed class StaleTaskRecoveryService
             if (_retryPolicy.ShouldRetry(task))
             {
                 task.Retry();
+
+                var payload = JsonSerializer.Serialize(
+                    new ExecuteTaskMessage(task.Id));
+
+                var outboxMessage = new OutboxMessage(
+                    "ExecuteTask",
+                    payload);
+
+                await _outboxRepository.AddAsync(
+                    outboxMessage,
+                    cancellationToken);
             }
         }
 

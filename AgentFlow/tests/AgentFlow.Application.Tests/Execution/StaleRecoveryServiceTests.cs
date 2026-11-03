@@ -42,6 +42,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);
@@ -71,6 +72,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);
@@ -111,6 +113,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);
@@ -155,6 +158,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);
@@ -184,6 +188,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);
@@ -219,6 +224,7 @@ namespace AgentFlow.Application.Tests.Execution
 
             var service = new StaleTaskRecoveryService(
                 taskRepository.Object,
+                new FakeOutboxMessageRepository(),
                 unitOfWork.Object,
                 retryPolicy,
                 clock);

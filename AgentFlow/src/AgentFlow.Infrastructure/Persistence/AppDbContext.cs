@@ -45,6 +45,11 @@ namespace AgentFlow.Infrastructure.Persistence
         public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
         /// <summary>
+        /// Task results table.
+        /// </summary>
+        public DbSet<TaskResult> TaskResults => Set<TaskResult>();
+
+        /// <summary>
         /// Begins a database transaction.
         /// </summary>
         public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
