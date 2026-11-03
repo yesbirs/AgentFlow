@@ -22,8 +22,9 @@ namespace AgentFlow.Infrastructure.Persistence
         /// </summary>
         public async Task AddAsync(Session session, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Sessions.AddAsync(session, cancellationToken);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Sessions.AddAsync(
+                session,
+                cancellationToken);
         }
 
         /// <summary>

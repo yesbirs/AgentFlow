@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AgentFlow.Infrastructure.Persistence.Configurations
 {
-public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
+    public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
     {
         /// <summary>
         /// Configures EF Core mappings for the Session entity.
@@ -24,6 +24,16 @@ public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
             builder.Property(s => s.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Property(x => x.State)
+                .HasConversion<string>()
+                .HasMaxLength(30)
+                .IsRequired();
+
+            builder.Property(x => x.UpdatedAt)
+                .IsRequired();
+
+            builder.Property(x => x.FailureReason)
+                .HasMaxLength(2000);
         }
     }
 }
